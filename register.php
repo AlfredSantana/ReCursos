@@ -1,5 +1,6 @@
 <?php
 include "conexion.php";
+session_start();
 $error = "";
 
 // Detectar si viene de premium
@@ -18,23 +19,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pass = $_POST['pass'];
     $confirm_pass = $_POST['confirm_pass'];
 
-    if ($pass !== $confirm_pass) {
+    // Validaciones adicionales
+    if (empty($nombre) || empty($correo) || empty($pass)) {
+        $error = "Todos los campos marcados con * son obligatorios.";
+    } elseif ($pass !== $confirm_pass) {
         $error = "Las contraseñas no coinciden. Por favor, revísalas.";
+    } elseif (strlen($pass) < 8) {
+        $error = "La contraseña debe tener al menos 8 caracteres.";
+    } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $error = "El formato del correo electrónico no es válido.";
     } else {
-        $pass_hash = MD5($pass);
+        // Usar sentencias preparadas para prevenir SQL injection
+        $stmt = mysqli_prepare($conexion, "INSERT INTO usuarios (nombre, correo, pass) VALUES (?, ?, MD5(?))");
 
-        $query = "INSERT INTO usuarios (nombre, correo, pass) 
-                  VALUES ('$nombre', '$correo', '$pass_hash')";
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sss", $nombre, $correo, $pass);
 
-        if (mysqli_query($conexion, $query)) {
-            header("Location: login.php");
-            exit();
-        } else {
-            if (mysqli_errno($conexion) == 1062) {
-                $error = "Este correo ya está registrado.";
+            if (mysqli_stmt_execute($stmt)) {
+                // Obtener el ID del usuario recién insertado
+                $user_id = mysqli_insert_id($conexion);
+
+                // Iniciar sesión automáticamente
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['user_name'] = $nombre;
+                $_SESSION['user_email'] = $correo;
+                $_SESSION['logged_in'] = true;
+
+                // Redirigir a home.php
+                header("Location: home.php");
+                exit();
             } else {
-                $error = "Error al registrar: " . mysqli_error($conexion);
+                if (mysqli_errno($conexion) == 1062) {
+                    $error = "Este correo ya está registrado.";
+                } else {
+                    $error = "Error al registrar: " . mysqli_error($conexion);
+                }
             }
+            mysqli_stmt_close($stmt);
+        } else {
+            $error = "Error en la preparación de la consulta: " . mysqli_error($conexion);
         }
     }
 }
@@ -62,10 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <h2>Regístrate</h2>
-            <p class="register-subtext"><?php echo $special_message; ?></p>
+            <p class="register-subtext"><?php echo htmlspecialchars($special_message); ?></p>
 
             <?php if (!empty($error)) {
-                echo "<p class='error-message'>$error</p>";
+                echo "<p class='error-message'>" . htmlspecialchars($error) . "</p>";
             } ?>
 
             <form method="POST" class="login-form">
