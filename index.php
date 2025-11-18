@@ -62,33 +62,32 @@ session_start();
                     </div>
                 </a>
 
-
-                <div class="card-curso">
+                <a href="categoria.php?id=musica" class="card-curso">
                     <img src="assets/categorias/musica.jpg" alt="Música e Instrumentos">
                     <span class="badge">Nuevo</span>
                     <div class="card-body">
                         <h3>Música e Instrumentos</h3>
                         <p class="desc">Guitarra, piano, canto y teoría musical.</p>
                     </div>
-                </div>
+                </a>
 
-                <div class="card-curso">
+                <a href="categoria.php?id=programacion" class="card-curso">
                     <img src="assets/categorias/programacion.jpeg" alt="Programación y Desarrollo">
                     <span class="badge">Tendencia</span>
                     <div class="card-body">
                         <h3>Programación</h3>
                         <p class="desc">Desarrollo web, aplicaciones móviles y más.</p>
                     </div>
-                </div>
+                </a>
 
-                <div class="card-curso">
+                <a href="categoria.php?id=baile" class="card-curso">
                     <img src="assets/categorias/baile.jpg" alt="Baile y Fitness">
                     <span class="badge">Popular</span>
                     <div class="card-body">
                         <h3>Baile & Fitness</h3>
                         <p class="desc">Bachata, merengue, coreografías y salud física.</p>
                     </div>
-                </div>
+                </a>
 
             </div>
         </section>
@@ -342,7 +341,6 @@ session_start();
                     <div class="plan-card">
                         <h4 class="plans-title">Premium Mensual</h4>
                         <p class="plan-price">RD$500 / mes</p>
-
                         <ul class="plan-features">
                             <li>✔ Acceso ilimitado</li>
                             <li>✔ Certificados gratuitos</li>
@@ -350,8 +348,7 @@ session_start();
                             <li>✔ Contenido exclusivo</li>
                             <li>✔ Soporte prioritario</li>
                         </ul>
-
-                        <a href="suscripcion.php" class="btn plan-btn">Elegir plan</a>
+                        <a href="login.php?action=premium" class="btn plan-btn">Elegir plan</a>
                     </div>
 
                     <!-- Plan Anual -->
@@ -359,7 +356,6 @@ session_start();
                         <div class="plan-badge">Ahorra 15%</div>
                         <h4 class="plans-title">Premium Anual</h4>
                         <p class="plan-price">RD$5,000 / año</p>
-
                         <ul class="plan-features">
                             <li>✔ Acceso ilimitado</li>
                             <li>✔ Certificados gratuitos</li>
@@ -368,8 +364,7 @@ session_start();
                             <li>✔ Contenido exclusivo</li>
                             <li>✔ Soporte prioritario</li>
                         </ul>
-
-                        <a href="suscripcion.php" class="btn plan-btn">Elegir plan</a>
+                        <a href="login.php?action=premium" class="btn plan-btn">Elegir plan</a>
                     </div>
                 </div>
             </div>

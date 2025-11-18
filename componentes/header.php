@@ -2,11 +2,11 @@
     <div class="wrap">
 
         <!-- Logo -->
-        <a href="index.php" class="logo-wrap">
+        <a href="<?php echo isset($_SESSION['user_id']) ? 'home.php' : 'index.php'; ?>" class="logo-wrap">
             <img src="assets/logo/logo3sf.png" class="logo" alt="ReCursos">
-            <span class="logo-text">
-                <span class="logo-re">Re</span><span class="logo-cursos">Cursos</ span>
-                </span>
+            <div class="logo-text">
+                <span class="logo-re">Re</span><span class="logo-cursos">Cursos</span>
+            </div>
         </a>
 
 
