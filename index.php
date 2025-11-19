@@ -33,17 +33,17 @@ session_start();
                 </div>
 
                 <p class="hero-premium-note">
-                    <img src="assets/icons/premium.svg" class="diamond-icon" alt="premium">
+                    <img title="ReCursos Premium" src="assets/icons/premium.svg" class="diamond-icon" alt="premium">
                     Obtén <strong>ReCursos Premium</strong>: sin anuncios, acceso ilimitado y certificados verificados.
                 </p>
             </div>
 
             <div class="hero-image">
-                <img src="assets/banners/hero-placeholder.avif" alt="Estudiantes aprendiendo">
+                <img title="Banner de chicos aprendiendo" src="assets/banners/hero-placeholder.avif"
+                    alt="Estudiantes aprendiendo">
                 <div class="hero-overlay"></div>
             </div>
         </section>
-
 
         <!---------------------------------------------->
         <!-- CATEGORÍAS -->
