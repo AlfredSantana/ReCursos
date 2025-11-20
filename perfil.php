@@ -57,6 +57,7 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
     <link rel="stylesheet" href="estilos.css">
     <link rel="stylesheet" href="responsive.css">
     <script defer src="js/theme.js"></script>
+    <script defer src="js/menu.js"></script>
 </head>
 
 <body>
@@ -79,7 +80,15 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                         </div>
 
                         <div class="profile-details">
-                            <h1><?php echo htmlspecialchars($user_name); ?></h1>
+                            <h1>
+                                <?php echo htmlspecialchars($user_name); ?>
+                                <?php if ($user_type === 'premium'): ?>
+                                    <span class="verified-badge-profile">
+                                        <img src="assets/icons/verified.svg" class="verified-icon-profile" alt="Verificado"
+                                            title="Usuario Premium Verificado">
+                                    </span>
+                                <?php endif; ?>
+                            </h1>
                             <p class="profile-email"><?php echo htmlspecialchars($user_email); ?></p>
 
                             <!-- MOSTRAR BIO AQUÍ -->
@@ -97,7 +106,10 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                             <div class="profile-badges">
                                 <span class="badge-role">Estudiante</span>
                                 <?php if ($user_type === 'premium'): ?>
-                                    <span class="badge-premium">Premium</span>
+                                    <span class="badge-premium">
+                                        <img src="assets/icons/verified.svg" class="badge-premium-icon" alt="Verificado">
+                                        Premium
+                                    </span>
                                 <?php endif; ?>
                                 <span class="badge-member">Miembro desde
                                     <?php echo date('M Y', strtotime($user_data['fecha_union'] ?? 'now')); ?></span>

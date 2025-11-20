@@ -6,7 +6,7 @@
   --primary-2: #182b5c;
   --bg: #ffffff;
   --text: #182b5c;
-  --muted: #6b7c93;
+  --muted: #c6cedb;
   --card-bg: #ffffff;
   --radius: 12px;
   --shadow: 0 6px 18px rgba(11, 27, 43, 0.08);
@@ -34,7 +34,7 @@
 /* Reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  background: linear-gradient(180deg, var(--bg), #071a2b 100%);
+  background: linear-gradient(180deg, var(--bg), #0c1d2f 100%);
   color: var(--text);
 }
 
@@ -83,8 +83,8 @@ body {
 
 /* Logo alineado a la izquierda */
 .logo {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 70px;
     object-fit: cover;
     border-radius: 50%;
     display: block;
@@ -889,6 +889,13 @@ footer {
   font-size: 14px;
 }
 
+/* Footer para tema claro */
+:root:not([data-theme="dark"]) footer {
+  background: #ffffff;
+  color: var(--primary-2);
+  border-top: 1px solid #e0e0e0;
+}
+
 .footer-content {
   max-width: 800px;
   margin: 0 auto;
@@ -905,6 +912,11 @@ footer {
     width: 28px;
     height: 28px;
     filter: invert(1) brightness(2);
+}
+
+/* Iconos sociales para tema claro */
+:root:not([data-theme="dark"]) .social-icon {
+    filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
 }
 
 /* ============================= */
@@ -974,7 +986,7 @@ footer {
     position: absolute;
     right: 0;
     top: 0;
-    width: 50%;
+    width: 75%;
     height: 100%;
     overflow: hidden;
 }
@@ -1969,5 +1981,645 @@ footer {
     
     .empty-actions {
         flex-direction: column;
+    }
+}
+
+/* ============================= */
+/* MENÚ LATERAL HAMBURGUESA */
+/* ============================= */
+
+/* Botón hamburguesa en el header */
+.menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background-color: var(--bg);
+}
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+
+:root[data-theme="dark"] .menu-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Menú lateral - OCULTO INICIALMENTE */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    background: var(--card-bg);
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.side-menu.active {
+    left: 0;
+}
+
+.side-menu-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.side-menu-header h3 {
+    margin: 0;
+    color: var(--text);
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu li {
+    border-bottom: 1px solid var(--muted);
+}
+
+.side-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color 0.3s ease;
+}
+
+.side-menu a:hover {
+    background: var(--bg);
+}
+
+.side-menu .logout-btn {
+    color: #d32f2f !important;
+    font-weight: 600;
+}
+
+/* Overlay del menú */
+.side-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.side-menu-overlay.active {
+    display: block;
+}
+
+
+/* Botón de cerrar menú */
+.close-menu {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-menu:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] .close-menu:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.close-icon {
+    width: 20px;
+    height: 20px;
+    /* Quitamos el filter que lo hacía blanco */
+    filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+/* Para el tema oscuro, el icono será blanco */
+:root[data-theme="dark"] .close-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Si el header del menú tiene fondo azul, forzamos el icono a blanco */
+.side-menu-header .close-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* Pero si quieres que en el tema claro el header sea blanco y el icono azul: */
+.side-menu-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card-bg); /* Usa el color de fondo de las tarjetas */
+    color: var(--text);
+}
+
+.side-menu-header h3 {
+    margin: 0;
+    color: var(--text);
+}
+
+/* Si el header es del color del tema, el icono se adapta */
+.side-menu-header .close-icon {
+    filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+:root[data-theme="dark"] .side-menu-header .close-icon {
+    filter: brightness(0) invert(1);
+}
+
+
+/* ============================= */
+/* HEADER LAYOUT CORREGIDO */
+/* ============================= */
+
+.site-header .wrap {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Grupo izquierdo: hamburguesa + logo */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+/* Botón hamburguesa */
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.menu-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] .menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+:root[data-theme="dark"] .menu-icon {
+  filter: brightness(0) invert(1);
+}
+
+/* Logo */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* Barra de búsqueda - en el centro */
+.search-bar {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+  margin: 0 20px;
+}
+
+/* Grupo derecho: theme + user menu */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+/* Asegurar que los elementos del header-right estén alineados */
+.header-right .nav {
+  display: flex;
+  align-items: center;
+}
+
+.header-right .nav ul {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Botón del tema */
+.theme-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] .theme-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-btn img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+:root[data-theme="dark"] .theme-btn img {
+  filter: brightness(0) invert(1);
+}
+
+/* User menu */
+.user-menu {
+  position: relative;
+}
+
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.user-dropdown:hover {
+  background: var(--card-bg);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ============================= */
+/* MENÚ LATERAL */
+/* ============================= */
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 300px;
+  height: 100vh;
+  background: var(--card-bg);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  z-index: 1001;
+  overflow-y: auto;
+}
+
+.side-menu.active {
+  left: 0;
+}
+
+.side-menu-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary);
+  color: white;
+}
+
+.side-menu-header h3 {
+  margin: 0;
+  color: white;
+}
+
+.close-menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-menu:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-menu li {
+  border-bottom: 1px solid var(--muted);
+}
+
+.side-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.side-menu a:hover {
+  background: var(--bg);
+}
+
+.side-menu .dropdown-icon {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(35%) saturate(2300%) hue-rotate(198deg) brightness(93%) contrast(94%);
+}
+
+:root[data-theme="dark"] .side-menu .dropdown-icon {
+  filter: brightness(0) invert(1);
+}
+
+.side-menu .logout-btn {
+  color: #d32f2f !important;
+  font-weight: 600;
+}
+
+/* Overlay del menú */
+.side-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.side-menu-overlay.active {
+  display: block;
+}
+
+/* ============================= */
+/* VERIFIED BADGE STYLES */
+/* ============================= */
+
+.verified-badge {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+}
+
+.verified-icon {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(2310%) hue-rotate(183deg) brightness(98%) contrast(101%);
+}
+
+.verified-badge-small {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+}
+
+.verified-icon-small {
+    width: 12px;
+    height: 12px;
+    filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(2310%) hue-rotate(183deg) brightness(98%) contrast(101%);
+}
+
+/* Asegurar que el nombre de usuario y el badge estén alineados */
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Para el tema oscuro */
+:root[data-theme="dark"] .verified-icon,
+:root[data-theme="dark"] .verified-icon-small {
+    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(527%) hue-rotate(183deg) brightness(101%) contrast(101%);
+}
+
+/* En el dropdown, alinear el badge con el texto */
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.dropdown-content a .verified-badge-small {
+    margin-left: auto;
+}
+
+/* ============================= */
+/* VERIFIED BADGE EN PERFIL */
+/* ============================= */
+
+.profile-details h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.verified-badge-profile {
+    display: inline-flex;
+    align-items: center;
+}
+
+.verified-icon-profile {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(2310%) hue-rotate(183deg) brightness(98%) contrast(101%);
+}
+
+/* Para el tema oscuro */
+:root[data-theme="dark"] .verified-icon-profile {
+    filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(527%) hue-rotate(183deg) brightness(101%) contrast(101%);
+}
+
+/* Asegurar que el título se vea bien en responsive */
+@media (max-width: 768px) {
+    .profile-details h1 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .verified-badge-profile {
+        margin-top: 5px;
+    }
+}
+
+/* Estilo para el badge premium con icono */
+.badge-premium {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+    font-weight: 700;
+}
+
+.badge-premium-icon {
+    width: 14px;
+    height: 14px;
+    filter: brightness(0) saturate(100%);
+}
+
+/* ============================= */
+/* SOLUCIÓN DEFINITIVA - SIN ESPACIO */
+/* ============================= */
+
+/* ELIMINAR cualquier padding o margin superior */
+.page-wrap {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 24px; /* QUITAR padding-top */
+}
+
+.main-content {
+    padding-top: 0;
+}
+
+/* Hero PEGADO al header */
+.hero-user {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, #182b5c 0%, #54b2fe 100%);
+    margin-bottom: 40px;
+    margin-top: 0; /* Asegurar que sea 0 */
+}
+
+/* Header con altura específica */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    padding: 12px 0;
+}
+
+/* Ajustar el body para que el contenido empiece DESPUÉS del header */
+body {
+    padding-top: 0; /* Asegurar que no hay padding */
+}
+
+.site-header .wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    height: auto; /* Altura automática */
+    min-height: 70px; /* Altura mínima en lugar de fija */
+}
+
+/* Si sigue habiendo espacio, usar este enfoque más agresivo */
+body * {
+    margin-top: 0 !important;
+}
+
+.main-content > *:first-child {
+    margin-top: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .site-header {
+        height: 70px; /* Altura menor en móvil */
+    }
+    
+    .hero-user {
+        height: auto;
+        min-height: 400px;
     }
 }

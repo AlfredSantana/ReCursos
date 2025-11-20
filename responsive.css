@@ -1,152 +1,326 @@
-/* ========================================= */
-/* ===========   BASE RESPONSIVE   ========= */
-/* ========================================= */
+/* ============================= */
+/* RESPONSIVE STYLES - MÓVILES */
+/* ============================= */
 
-/* Quitar espacios laterales en móviles */
-body, html {
-    overflow-x: hidden;
-}
-
-/* ========================================= */
-/* HEADER - MODO MÓVIL */
-/* ========================================= */
-
+/* Tablets pequeñas y móviles */
 @media (max-width: 768px) {
-
-    .site-header .wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 15px;
-        gap: 10px;
-    }
-
-    /* Logo más pequeño */
-    .logo-wrap .logo {
-        width: 40px !important;
-        height: auto;
-    }
-
-    .logo-text {
-        font-size: 1.25rem;
-    }
-
-    /* ------- BUSCADOR ------- */
-    .search-bar {
-        width: 100%;
-        order: 3;
-        margin-top: 10px;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 10px;
-        font-size: 0.95rem;
-    }
-
-    /* ------- NAV ------- */
-    .nav ul {
-        display: flex;
+    
+    /* HEADER PRINCIPAL (index.php - sin loguear) */
+    .index-header .wrap {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "logo search nav";
         align-items: center;
         gap: 15px;
+        padding: 10px 15px;
     }
-
-    /* Ocultar texto del usuario y solo dejar avatar */
-    .user-dropdown span {
+    
+    .index-header .logo-wrap {
+        grid-area: logo;
+    }
+    
+    .index-header .search-bar {
+        grid-area: search;
+        margin: 0;
+    }
+    
+    .index-header .nav {
+        grid-area: nav;
+        justify-self: end;
+    }
+    
+    .index-header .nav ul {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    
+    .index-header .btn-login,
+    .index-header .btn-sm {
+        padding: 8px 12px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    
+    /* HEADER HOME (logueado) */
+    .site-header:not(.index-header):not(.login-header) .wrap {
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-areas: "menu logo search user";
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .header-left {
+        grid-area: menu;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .logo-wrap {
+        grid-area: logo;
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .search-bar {
+        grid-area: search;
+        margin: 0;
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .header-right {
+        grid-area: user;
+        justify-self: end;
+    }
+    
+    /* HEADER REGISTER/LOGIN */
+    .login-header .wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+    }
+    
+    .login-header .nav ul {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    /* ESTILOS COMUNES PARA TODOS LOS HEADERS */
+    .logo {
+        height: 40px;
+        width: 40px;
+    }
+    
+    .logo-text {
+        font-size: 18px;
+    }
+    
+    .search-input {
+        padding: 10px 40px 10px 12px;
+        font-size: 14px;
+    }
+    
+    .theme-btn {
+        padding: 8px;
+    }
+    
+    /* User menu en móvil */
+    .user-dropdown span:not(.user-avatar) {
         display: none;
     }
-
+    
+    .premium-badge {
+        display: none;
+    }
+    
     .user-avatar {
-        width: 35px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .user-dropdown .dropdown-content {
+        position: fixed;
+        top: 70px;
+        right: 15px;
+        left: 15px;
+        width: auto;
+        min-width: auto;
+        z-index: 1000;
+    }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+    
+    /* HEADER PRINCIPAL - index.php */
+    .index-header .wrap {
+        gap: 10px;
+        padding: 8px 10px;
+    }
+    
+    .index-header .btn-login,
+    .index-header .btn-sm {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .index-header .logo-text {
+        display: none; /* Ocultar texto del logo en móvil muy pequeño */
+    }
+    
+    /* HEADER HOME - logueado */
+    .site-header:not(.index-header):not(.login-header) .wrap {
+        gap: 8px;
+        padding: 8px 10px;
+        grid-template-columns: auto auto 1fr auto;
+        grid-template-areas: "menu logo search user";
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .logo-text {
+        display: none; /* Ocultar texto del logo */
+    }
+    
+    .site-header:not(.index-header):not(.login-header) .search-bar {
+        min-width: 120px;
+    }
+    
+    /* HEADER REGISTER/LOGIN */
+    .login-header .wrap {
+        padding: 8px 10px;
+    }
+    
+    .login-header .nav a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    /* Ajustes generales */
+    .logo {
         height: 35px;
+        width: 35px;
     }
-
-    /* Dropdown ajustado */
-    .dropdown-content {
-        right: 0;
-        left: auto;
-        width: 180px;
+    
+    .search-input {
+        font-size: 13px;
+        padding: 8px 35px 8px 10px;
     }
-}
-
-
-/* ========================================= */
-/* FOOTER */
-/* ========================================= */
-
-@media (max-width: 768px) {
-
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .footer-social {
-        justify-content: center;
-        gap: 12px;
-    }
-
-    .social-icon {
+    
+    .user-avatar {
         width: 28px;
+        height: 28px;
     }
 }
 
-
-/* ========================================= */
-/* TARJETAS DE CURSOS EN GRID */
-/* ========================================= */
-
-@media (max-width: 768px) {
-
-    .cursos-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
+/* Móviles muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+    
+    .index-header .wrap {
+        grid-template-columns: auto 1fr auto;
+        gap: 6px;
     }
-
-    .card-curso img {
-        height: 180px;
+    
+    .site-header:not(.index-header):not(.login-header) .wrap {
+        grid-template-columns: auto auto 1fr auto;
+        gap: 6px;
     }
-
-    .card-body h3 {
-        font-size: 1.1rem;
+    
+    .search-bar {
+        min-width: 100px;
+    }
+    
+    .index-header .btn-login,
+    .index-header .btn-sm {
+        padding: 5px 8px;
+        font-size: 12px;
     }
 }
 
-
-/* ========================================= */
-/* FORMULARIOS - crear-curso / editar-perfil */
-/* ========================================= */
-
+/* COMPORTAMIENTO BÚSQUEDA EN MÓVIL */
 @media (max-width: 768px) {
-
-    .course-form,
-    .form-group,
-    .form-row {
+    .search-bar {
+        position: relative;
+    }
+    
+    .search-bar.collapsed {
+        width: 40px;
+    }
+    
+    .search-bar.collapsed .search-input {
+        width: 0;
+        padding: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+    
+    .search-bar.collapsed .search-btn {
+        position: static;
+        transform: none;
+    }
+    
+    .search-bar:not(.collapsed) {
         width: 100%;
+    }
+}
+
+/* MENÚ LATERAL RESPONSIVE */
+@media (max-width: 768px) {
+    .side-menu {
+        width: 280px;
+        transform: translateX(-100%);
+    }
+    
+    .side-menu.active {
+        transform: translateX(0);
+    }
+    
+    .side-menu-overlay {
+        display: none;
+    }
+    
+    .side-menu-overlay.active {
         display: block;
     }
+}
 
-    .form-row {
-        gap: 0;
+/* FOOTER RESPONSIVE */
+@media (max-width: 768px) {
+    .footer {
+        padding: 20px 15px;
     }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        font-size: 1rem;
-        padding: 12px;
-    }
-
-    .form-actions {
-        display: flex;
+    
+    .footer-content {
         flex-direction: column;
-        gap: 10px;
-    }
-
-    .form-actions .btn {
-        width: 100%;
+        gap: 15px;
         text-align: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+/* JavaScript para dropdown en móvil */
+.user-dropdown.active .dropdown-content {
+    display: block;
+}
+
+/* COMPORTAMIENTO USER DROPDOWN EN MÓVIL */
+@media (max-width: 768px) {
+    .user-dropdown {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .user-dropdown .dropdown-content {
+        display: none;
+        position: fixed;
+        top: 70px;
+        right: 15px;
+        left: 15px;
+        width: auto;
+        min-width: auto;
+        z-index: 1000;
+    }
+    
+    .user-dropdown.active .dropdown-content {
+        display: block;
+    }
+    
+    /* Overlay para cerrar al hacer tap fuera */
+    .dropdown-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: transparent;
+        z-index: 999;
+    }
+    
+    .dropdown-overlay.active {
+        display: block;
     }
 }

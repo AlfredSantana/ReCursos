@@ -98,6 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="estilos.css">
     <link rel="stylesheet" href="responsive.css">
     <script defer src="js/theme.js"></script>
+    <script defer src="js/menu.js"></script>
 </head>
 
 <body>

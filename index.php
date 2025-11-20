@@ -103,7 +103,7 @@ session_start();
             <div class="cursos-grid">
 
                 <article class="card-curso">
-                    <img src="assets/cursos/cocina1.webp" alt="Cocina Dominicana" loading="lazy">
+                    <img src="assets/cursos/cocina1.jpg" alt="Cocina Dominicana" loading="lazy">
                     <span class="badge">Nuevo</span>
                     <div class="card-body">
                         <h3>Cocina Dominicana para Principiantes</h3>

@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header index-header">
     <div class="wrap">
 
         <!-- Logo -->
@@ -11,10 +11,15 @@
 
 
         <!-- Barra de búsqueda -->
-        <form class="search-bar" action="buscar.php" method="GET">
-            <input type="text" name="q" placeholder="Buscar cursos, categorías o instructores...">
-            <img src="assets/icons/search.svg" class="search-icon" alt="buscar">
-        </form>
+        <div class="search-bar">
+            <form method="GET" action="buscar.php" class="search-form">
+                <input type="text" name="q" placeholder="Buscar cursos..."
+                    value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>" class="search-input">
+                <button type="submit" class="search-btn">
+                    <img src="assets/icons/search.svg" class="search-icon" alt="Buscar">
+                </button>
+            </form>
+        </div>
 
         <!-- Navegación -->
         <nav class="nav">
