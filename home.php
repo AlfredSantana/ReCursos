@@ -32,9 +32,10 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Inicio — ReCursos</title>
     <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
     <script defer src="js/theme.js"></script>
 </head>
 

@@ -1,0 +1,152 @@
+/* ========================================= */
+/* ===========   BASE RESPONSIVE   ========= */
+/* ========================================= */
+
+/* Quitar espacios laterales en móviles */
+body, html {
+    overflow-x: hidden;
+}
+
+/* ========================================= */
+/* HEADER - MODO MÓVIL */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+    .site-header .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px;
+        gap: 10px;
+    }
+
+    /* Logo más pequeño */
+    .logo-wrap .logo {
+        width: 40px !important;
+        height: auto;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    /* ------- BUSCADOR ------- */
+    .search-bar {
+        width: 100%;
+        order: 3;
+        margin-top: 10px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    /* ------- NAV ------- */
+    .nav ul {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Ocultar texto del usuario y solo dejar avatar */
+    .user-dropdown span {
+        display: none;
+    }
+
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Dropdown ajustado */
+    .dropdown-content {
+        right: 0;
+        left: auto;
+        width: 180px;
+    }
+}
+
+
+/* ========================================= */
+/* FOOTER */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .footer-social {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .social-icon {
+        width: 28px;
+    }
+}
+
+
+/* ========================================= */
+/* TARJETAS DE CURSOS EN GRID */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+    .cursos-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .card-curso img {
+        height: 180px;
+    }
+
+    .card-body h3 {
+        font-size: 1.1rem;
+    }
+}
+
+
+/* ========================================= */
+/* FORMULARIOS - crear-curso / editar-perfil */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+    .course-form,
+    .form-group,
+    .form-row {
+        width: 100%;
+        display: block;
+    }
+
+    .form-row {
+        gap: 0;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .form-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}

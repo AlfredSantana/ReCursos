@@ -8,6 +8,7 @@ $usuario = $_SESSION['usuario'] ?? null;
 
 <head>
     <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
 </head>
 
 <body>

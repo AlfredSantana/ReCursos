@@ -42,9 +42,10 @@ while ($categoria = mysqli_fetch_assoc($categorias_result)) {
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buscar — ReCursos</title>
     <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
     <script defer src="js/theme.js"></script>
 </head>
 

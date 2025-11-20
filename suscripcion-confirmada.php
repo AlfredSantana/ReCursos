@@ -21,6 +21,7 @@ $_SESSION['usuario']['tipo_usuario'] = "premium";
 
 <head>
     <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
 </head>
 
 <body>
