@@ -171,17 +171,32 @@ document.addEventListener('DOMContentLoaded', function() {
 //       PORTADA
 // -----------------//
 
-// Upload de portada
+// Upload de portada (FUNCIONALIDAD COMPLETA)
 document.getElementById('cover-upload').addEventListener('change', function (e) {
     if (this.files && this.files[0]) {
-        // Aquí iría la lógica para subir la portada al servidor
-        alert('Funcionalidad de subir portada en desarrollo. Por ahora, esta función es demostrativa.');
-
-        // Simular cambio de portada (en un caso real, esto se haría con AJAX)
+        // Validar tipo de archivo
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(this.files[0].type)) {
+            alert('Por favor, sube una imagen válida (JPEG, PNG, GIF, WebP)');
+            this.value = '';
+            return;
+        }
+        
+        // Validar tamaño (5MB)
+        if (this.files[0].size > 5 * 1024 * 1024) {
+            alert('La imagen es muy grande. Máximo 5MB permitidos.');
+            this.value = '';
+            return;
+        }
+        
+        // Mostrar vista previa
         const reader = new FileReader();
         reader.onload = function (e) {
             document.getElementById('cover-image').src = e.target.result;
         }
         reader.readAsDataURL(this.files[0]);
+        
+        // Enviar formulario automáticamente
+        document.getElementById('cover-form').submit();
     }
 });

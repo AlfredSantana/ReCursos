@@ -31,36 +31,73 @@ $result_portada = mysqli_stmt_get_result($stmt_portada);
 $portada_data = mysqli_fetch_assoc($result_portada);
 $portada_perfil = $portada_data['portada_url'] ?? 'assets/portadas/default-portada.png';
 
-if (empty($error)) {
-    // Obtener los nuevos datos de ubicación
-    $pais = trim($_POST['pais'] ?? '');
-    $ciudad = trim($_POST['ciudad'] ?? '');
+// VERIFICAR SI EL FORMULARIO FUE ENVIADO
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Actualizar datos del usuario (AGREGAR pais y ciudad)
-    $update_query = "UPDATE usuarios SET nombre = ?, correo = ?, bio = ?, avatar = ?, pais = ?, ciudad = ? WHERE id = ?";
-    $update_stmt = mysqli_prepare($conexion, $update_query);
-    mysqli_stmt_bind_param($update_stmt, "ssssssi", $nombre, $email, $bio, $avatar_path, $pais, $ciudad, $user_id);
-    // Nota: Cambiamos de "ssssi" a "ssssssi" por los 2 campos nuevos
+    // Obtener y validar datos del formulario
+    $nombre = trim($_POST['nombre'] ?? $user_data['nombre']);
+    $email = trim($_POST['correo'] ?? $user_data['correo']);
+    $bio = trim($_POST['bio'] ?? $user_data['bio'] ?? '');
+    $pais = trim($_POST['pais'] ?? $user_data['pais'] ?? '');
+    $ciudad = trim($_POST['ciudad'] ?? $user_data['ciudad'] ?? '');
 
-    if (mysqli_stmt_execute($update_stmt)) {
-        // Actualizar datos en la sesión
-        $_SESSION['user_name'] = $nombre;
-        $_SESSION['user_email'] = $email;
-
-        $success = "Perfil actualizado correctamente.";
-
-        // Actualizar datos locales
-        $user_data['nombre'] = $nombre;
-        $user_data['correo'] = $email;
-        $user_data['bio'] = $bio;
-        $user_data['avatar'] = $avatar_path;
-        $user_data['pais'] = $pais;
-        $user_data['ciudad'] = $ciudad;
+    // Validar campos obligatorios
+    if (empty($nombre) || empty($email)) {
+        $error = "El nombre y correo son obligatorios";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "El formato del correo no es válido";
     } else {
-        $error = "Error al actualizar el perfil: " . mysqli_error($conexion);
-    }
+        // Verificar si el correo ya existe en otro usuario
+        $check_email_query = "SELECT id FROM usuarios WHERE correo = ? AND id != ?";
+        $check_stmt = mysqli_prepare($conexion, $check_email_query);
+        mysqli_stmt_bind_param($check_stmt, "si", $email, $user_id);
+        mysqli_stmt_execute($check_stmt);
+        $email_result = mysqli_stmt_get_result($check_stmt);
 
-    mysqli_stmt_close($update_stmt);
+        if (mysqli_num_rows($email_result) > 0) {
+            $error = "El correo electrónico ya está en uso por otro usuario";
+        } else {
+            // Manejar upload de avatar
+            $avatar_path = $user_data['avatar']; // Mantener el actual por defecto
+
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                $avatar_tmp = $_FILES['avatar']['tmp_name'];
+                $avatar_name = uniqid() . '_' . $_FILES['avatar']['name'];
+                $avatar_dest = 'assets/avatars/' . $avatar_name;
+
+                if (move_uploaded_file($avatar_tmp, $avatar_dest)) {
+                    $avatar_path = $avatar_dest;
+                    // Opcional: eliminar avatar anterior si no es el default
+                }
+            }
+
+            // Actualizar datos del usuario
+            $update_query = "UPDATE usuarios SET nombre = ?, correo = ?, bio = ?, avatar = ?, pais = ?, ciudad = ? WHERE id = ?";
+            $update_stmt = mysqli_prepare($conexion, $update_query);
+            mysqli_stmt_bind_param($update_stmt, "ssssssi", $nombre, $email, $bio, $avatar_path, $pais, $ciudad, $user_id);
+
+            if (mysqli_stmt_execute($update_stmt)) {
+                // Actualizar datos en la sesión
+                $_SESSION['user_name'] = $nombre;
+                $_SESSION['user_email'] = $email;
+
+                $success = "Perfil actualizado correctamente.";
+
+                // Actualizar datos locales
+                $user_data['nombre'] = $nombre;
+                $user_data['correo'] = $email;
+                $user_data['bio'] = $bio;
+                $user_data['avatar'] = $avatar_path;
+                $user_data['pais'] = $pais;
+                $user_data['ciudad'] = $ciudad;
+            } else {
+                $error = "Error al actualizar el perfil: " . mysqli_error($conexion);
+            }
+
+            mysqli_stmt_close($update_stmt);
+        }
+        mysqli_stmt_close($check_stmt);
+    }
 }
 
 // Procesar actualización de perfil

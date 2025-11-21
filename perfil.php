@@ -11,6 +11,60 @@ include "conexion.php";
 
 $user_id = $_SESSION['user_id'];
 
+// MANEJAR SUBIDA DE PORTADA
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['portada'])) {
+    $file = $_FILES['portada'];
+
+    // Validar que sea una imagen
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $max_size = 5 * 1024 * 1024; // 5MB
+
+    if (in_array($file['type'], $allowed_types) && $file['size'] <= $max_size) {
+        // Crear directorio si no existe
+        $upload_dir = 'assets/portadas/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        // Generar nombre único
+        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $file_name = 'portada_' . $user_id . '_' . time() . '.' . $file_extension;
+        $file_path = $upload_dir . $file_name;
+
+        if (move_uploaded_file($file['tmp_name'], $file_path)) {
+            // Insertar en la base de datos
+            $insert_query = "INSERT INTO portadas_perfil (usuario_id, portada_url) VALUES (?, ?)";
+            $stmt = mysqli_prepare($conexion, $insert_query);
+            mysqli_stmt_bind_param($stmt, "is", $user_id, $file_path);
+
+            if (mysqli_stmt_execute($stmt)) {
+                $_SESSION['success'] = "Portada actualizada correctamente";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit;
+            } else {
+                $_SESSION['error'] = "Error al guardar en la base de datos";
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $_SESSION['error'] = "Error al subir la imagen";
+        }
+    } else {
+        $_SESSION['error'] = "Formato no válido o archivo muy grande (máx. 5MB)";
+    }
+}
+
+// Mostrar mensajes de éxito/error
+if (isset($_SESSION['success'])) {
+    $success_message = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
+
+if (isset($_SESSION['error'])) {
+    $error_message = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
+
 // Obtener información actualizada del usuario (solo una vez)
 $query = "SELECT *, DATE(fecha_registro) as fecha_union FROM usuarios WHERE id = ?";
 $stmt = mysqli_prepare($conexion, $query);
@@ -93,10 +147,17 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
             <!-- Header del Perfil -->
             <section class="profile-header">
                 <!-- Portada del perfil -->
+                <!-- Portada del perfil -->
                 <div class="profile-cover">
                     <img src="<?php echo htmlspecialchars($portada_perfil); ?>" alt="Portada del perfil"
                         class="cover-image" id="cover-image">
-                    <input type="file" id="cover-upload" accept="image/*" style="display: none;">
+
+                    <!-- Formulario para subir portada -->
+                    <form id="cover-form" action="perfil.php" method="POST" enctype="multipart/form-data"
+                        style="display: none;">
+                        <input type="file" id="cover-upload" name="portada" accept="image/*">
+                    </form>
+
                     <button class="btn-cover-edit" onclick="document.getElementById('cover-upload').click()"
                         title="Cambiar portada">
                         <img src="assets/icons/edit.svg" alt="Cambiar portada">
@@ -308,8 +369,8 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
     <?php include "componentes/footer.php"; ?>
 
     <script>
-        // JavaScript para las pestañas
         document.addEventListener('DOMContentLoaded', function () {
+            // JavaScript para las pestañas
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
 
@@ -329,20 +390,61 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                 });
             });
 
-            // Upload de avatar (simulado por ahora)
+            // Upload de avatar
             document.getElementById('avatar-upload').addEventListener('change', function (e) {
                 if (this.files && this.files[0]) {
-                    // Aquí iría la lógica para subir la imagen al servidor
-                    alert('Funcionalidad de subir avatar en desarrollo. Por ahora, esta función es demostrativa.');
-
-                    // Simular cambio de avatar (en un caso real, esto se haría con AJAX)
+                    // Aquí puedes agregar la funcionalidad para subir avatar
+                    // Por ahora mantenemos la vista previa
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         document.getElementById('profile-avatar').src = e.target.result;
                     }
                     reader.readAsDataURL(this.files[0]);
+
+                    // Para subir el avatar necesitarías un formulario similar al de portada
+                    alert('Para cambiar el avatar, ve a "Editar Perfil"');
+                    this.value = ''; // Limpiar el input
                 }
             });
+
+            // Upload de portada (FUNCIONALIDAD COMPLETA)
+            document.getElementById('cover-upload').addEventListener('change', function (e) {
+                if (this.files && this.files[0]) {
+                    // Validar tipo de archivo
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!allowedTypes.includes(this.files[0].type)) {
+                        alert('Por favor, sube una imagen válida (JPEG, PNG, GIF, WebP)');
+                        this.value = '';
+                        return;
+                    }
+
+                    // Validar tamaño (5MB)
+                    if (this.files[0].size > 5 * 1024 * 1024) {
+                        alert('La imagen es muy grande. Máximo 5MB permitidos.');
+                        this.value = '';
+                        return;
+                    }
+
+                    // Mostrar vista previa
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('cover-image').src = e.target.result;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+
+                    // Enviar formulario automáticamente
+                    document.getElementById('cover-form').submit();
+                }
+            });
+
+            // Mostrar mensajes
+            <?php if (isset($success_message)): ?>
+                alert('<?php echo $success_message; ?>');
+            <?php endif; ?>
+
+            <?php if (isset($error_message)): ?>
+                alert('<?php echo $error_message; ?>');
+            <?php endif; ?>
         });
     </script>
 </body>
