@@ -28,7 +28,21 @@ $user_name = $_SESSION['user_name'];
 $user_email = $_SESSION['user_email'];
 $user_avatar = $_SESSION['user_avatar'];
 $user_type = $_SESSION['user_type'] ?? 'normal';
-$user_bio = $user_data['bio'] ?? ''; // Obtener la bio
+$user_bio = $user_data['bio'] ?? '';
+$user_pais = $user_data['pais'] ?? '';
+$user_ciudad = $user_data['ciudad'] ?? '';
+$portada_perfil = $user_data['portada_perfil'] ?? 'assets/portadas/default-portada.png';
+$es_instructor = $user_data['es_instructor'] ?? false;
+
+// Obtener portada del perfil desde la tabla separada
+$query_portada = "SELECT portada_url FROM portadas_perfil WHERE usuario_id = ? ORDER BY fecha_creacion DESC LIMIT 1";
+$stmt_portada = mysqli_prepare($conexion, $query_portada);
+mysqli_stmt_bind_param($stmt_portada, "i", $user_id);
+mysqli_stmt_execute($stmt_portada);
+$result_portada = mysqli_stmt_get_result($stmt_portada);
+$portada_data = mysqli_fetch_assoc($result_portada);
+
+$portada_perfil = $portada_data['portada_url'] ?? 'assets/portadas/default-portada.png';
 
 // Obtener cursos creados por el usuario
 $query_cursos = "SELECT * FROM cursos WHERE instructor_id = ? ORDER BY fecha_creacion DESC";
@@ -39,6 +53,15 @@ $cursos_result = mysqli_stmt_get_result($stmt_cursos);
 
 // Contar total de cursos creados
 $total_creados = mysqli_num_rows($cursos_result);
+
+// Si tiene cursos creados, actualizar el estado de instructor
+if ($total_creados > 0 && !$es_instructor) {
+    $update_instructor = "UPDATE usuarios SET es_instructor = TRUE WHERE id = ?";
+    $stmt_update = mysqli_prepare($conexion, $update_instructor);
+    mysqli_stmt_bind_param($stmt_update, "i", $user_id);
+    mysqli_stmt_execute($stmt_update);
+    $es_instructor = true;
+}
 
 // Obtener algunos cursos populares para mostrar (simulando "cursos tomados")
 $query_cursos_populares = "SELECT * FROM cursos WHERE instructor_id != ? ORDER BY fecha_creacion DESC LIMIT 3";
@@ -66,8 +89,20 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
 
     <div class="page-wrap">
         <main class="main-content">
+
             <!-- Header del Perfil -->
             <section class="profile-header">
+                <!-- Portada del perfil -->
+                <div class="profile-cover">
+                    <img src="<?php echo htmlspecialchars($portada_perfil); ?>" alt="Portada del perfil"
+                        class="cover-image" id="cover-image">
+                    <input type="file" id="cover-upload" accept="image/*" style="display: none;">
+                    <button class="btn-cover-edit" onclick="document.getElementById('cover-upload').click()"
+                        title="Cambiar portada">
+                        <img src="assets/icons/edit.svg" alt="Cambiar portada">
+                    </button>
+                </div>
+
                 <div class="container">
                     <div class="profile-info">
                         <div class="profile-avatar-section">
@@ -103,8 +138,31 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                                 </div>
                             <?php endif; ?>
 
+                            <!-- Ubicación -->
+                            <?php if (!empty($user_pais) || !empty($user_ciudad)): ?>
+                                <div class="profile-location">
+                                    <img src="assets/icons/location.svg" alt="Ubicación" class="location-icon">
+                                    <span>
+                                        <?php
+                                        if (!empty($user_ciudad) && !empty($user_pais)) {
+                                            echo htmlspecialchars($user_ciudad) . ', ' . htmlspecialchars($user_pais);
+                                        } elseif (!empty($user_pais)) {
+                                            echo htmlspecialchars($user_pais);
+                                        } elseif (!empty($user_ciudad)) {
+                                            echo htmlspecialchars($user_ciudad);
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
+
                             <div class="profile-badges">
                                 <span class="badge-role">Estudiante</span>
+                                <?php if ($es_instructor): ?>
+                                    <span class="badge-instructor">
+                                        Instructor
+                                    </span>
+                                <?php endif; ?>
                                 <?php if ($user_type === 'premium'): ?>
                                     <span class="badge-premium">
                                         <img src="assets/icons/verified.svg" class="badge-premium-icon" alt="Verificado">
@@ -132,8 +190,15 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                         </div>
 
                         <div class="profile-actions">
-                            <a href="editar-perfil.php" class="btn btn-outline">Editar Perfil</a>
-                            <a href="crear-curso.php" class="btn btn-primary">Crear Curso</a>
+                            <a href="editar-perfil.php" class="profile-icon-btn">
+                                <img src="assets/icons/edit-profile.svg" alt="">
+                                Editar Perfil
+                            </a>
+
+                            <a href="crear-curso.php" class="profile-icon-btn primary">
+                                <img src="assets/icons/add-course.svg" alt="">
+                                Crear Curso
+                            </a>
                         </div>
                     </div>
                 </div>

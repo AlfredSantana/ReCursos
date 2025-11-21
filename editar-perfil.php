@@ -22,6 +22,47 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $user_data = mysqli_fetch_assoc($result);
 
+// Obtener portada actual
+$query_portada = "SELECT portada_url FROM portadas_perfil WHERE usuario_id = ? ORDER BY fecha_creacion DESC LIMIT 1";
+$stmt_portada = mysqli_prepare($conexion, $query_portada);
+mysqli_stmt_bind_param($stmt_portada, "i", $user_id);
+mysqli_stmt_execute($stmt_portada);
+$result_portada = mysqli_stmt_get_result($stmt_portada);
+$portada_data = mysqli_fetch_assoc($result_portada);
+$portada_perfil = $portada_data['portada_url'] ?? 'assets/portadas/default-portada.png';
+
+if (empty($error)) {
+    // Obtener los nuevos datos de ubicación
+    $pais = trim($_POST['pais'] ?? '');
+    $ciudad = trim($_POST['ciudad'] ?? '');
+
+    // Actualizar datos del usuario (AGREGAR pais y ciudad)
+    $update_query = "UPDATE usuarios SET nombre = ?, correo = ?, bio = ?, avatar = ?, pais = ?, ciudad = ? WHERE id = ?";
+    $update_stmt = mysqli_prepare($conexion, $update_query);
+    mysqli_stmt_bind_param($update_stmt, "ssssssi", $nombre, $email, $bio, $avatar_path, $pais, $ciudad, $user_id);
+    // Nota: Cambiamos de "ssssi" a "ssssssi" por los 2 campos nuevos
+
+    if (mysqli_stmt_execute($update_stmt)) {
+        // Actualizar datos en la sesión
+        $_SESSION['user_name'] = $nombre;
+        $_SESSION['user_email'] = $email;
+
+        $success = "Perfil actualizado correctamente.";
+
+        // Actualizar datos locales
+        $user_data['nombre'] = $nombre;
+        $user_data['correo'] = $email;
+        $user_data['bio'] = $bio;
+        $user_data['avatar'] = $avatar_path;
+        $user_data['pais'] = $pais;
+        $user_data['ciudad'] = $ciudad;
+    } else {
+        $error = "Error al actualizar el perfil: " . mysqli_error($conexion);
+    }
+
+    mysqli_stmt_close($update_stmt);
+}
+
 // Procesar actualización de perfil
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST['nombre']);
@@ -59,6 +100,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $error = "Solo se permiten imágenes JPG, PNG, GIF o WEBP.";
+        }
+    }
+
+    // Procesar portada si se subió una nueva
+    if (isset($_FILES['portada']) && $_FILES['portada']['error'] === UPLOAD_ERR_OK) {
+        $portada = $_FILES['portada'];
+
+        // Validar que sea una imagen
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (in_array($portada['type'], $allowed_types)) {
+
+            // Crear directorio si no existe
+            if (!is_dir('assets/portadas/')) {
+                mkdir('assets/portadas/', 0777, true);
+            }
+
+            // Generar nombre único para la imagen
+            $extension = pathinfo($portada['name'], PATHINFO_EXTENSION);
+            $portada_filename = 'portada_' . $user_id . '_' . time() . '.' . $extension;
+            $portada_path = 'assets/portadas/' . $portada_filename;
+
+            // Mover el archivo
+            if (move_uploaded_file($portada['tmp_name'], $portada_path)) {
+                // Insertar en tabla portadas_perfil
+                $insert_portada = "INSERT INTO portadas_perfil (usuario_id, portada_url) VALUES (?, ?)";
+                $stmt_portada = mysqli_prepare($conexion, $insert_portada);
+                mysqli_stmt_bind_param($stmt_portada, "is", $user_id, $portada_path);
+                mysqli_stmt_execute($stmt_portada);
+            } else {
+                $error = "Error al subir la portada.";
+            }
+        } else {
+            $error = "Solo se permiten imágenes JPG, PNG, GIF o WEBP para la portada.";
         }
     }
 
@@ -152,6 +226,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             placeholder="Cuéntanos sobre ti..."><?php echo htmlspecialchars($user_data['bio'] ?? ''); ?></textarea>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pais">País</label>
+                            <input type="text" id="pais" name="pais"
+                                value="<?php echo htmlspecialchars($user_data['pais'] ?? ''); ?>"
+                                placeholder="Ej: República Dominicana">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad</label>
+                            <input type="text" id="ciudad" name="ciudad"
+                                value="<?php echo htmlspecialchars($user_data['ciudad'] ?? ''); ?>"
+                                placeholder="Ej: Santo Domingo">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="portada">Portada del Perfil</label>
+                        <div class="portada-upload">
+                            <img src="<?php echo htmlspecialchars($portada_perfil ?? 'assets/portadas/default-portada.png'); ?>"
+                                alt="Portada actual" class="current-portada" id="portada-preview">
+                            <input type="file" id="portada" name="portada" accept="image/*"
+                                onchange="previewPortada(this)">
+                            <label for="portada" class="btn btn-outline">Cambiar Portada</label>
+                        </div>
+                    </div>
+
                     <div class="form-actions">
                         <a href="perfil.php" class="btn btn-outline">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -169,6 +270,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById('avatar-preview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewPortada(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('portada-preview').src = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
             }

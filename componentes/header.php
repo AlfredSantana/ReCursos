@@ -2,12 +2,25 @@
     <div class="wrap">
 
         <!-- Logo -->
-        <a href="<?php echo isset($_SESSION['user_id']) ? 'home.php' : 'index.php'; ?>" class="logo-wrap">
+        <!-- Logo -->
+        <a href="<?php
+        // páginas donde el logo SIEMPRE debe ir a index.php
+        $forzarIndex = ['index.php', 'login.php', 'register.php'];
+
+        $paginaActual = basename($_SERVER['PHP_SELF']);
+
+        if (in_array($paginaActual, $forzarIndex)) {
+            echo 'index.php';
+        } else {
+            echo isset($_SESSION['user_id']) ? 'home.php' : 'index.php';
+        }
+        ?>" class="logo-wrap">
             <img title="ReCursos logo" src="assets/logo/logo3sf.png" class="logo" alt="ReCursos logo">
             <div class="logo-text">
                 <span class="logo-re">Re</span><span class="logo-cursos">Cursos</span>
             </div>
         </a>
+
 
 
         <!-- Barra de búsqueda -->

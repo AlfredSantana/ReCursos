@@ -324,3 +324,119 @@
         display: block;
     }
 }
+
+/* Responsive para perfil */
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .profile-stats {
+        justify-content: center;
+        gap: 20px;
+    }
+    
+    .profile-actions {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-details h1 {
+        font-size: 24px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .tabs {
+        gap: 10px;
+    }
+    
+    .tab-btn {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .profile-badges {
+        justify-content: center;
+    }
+    
+    .card-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Asegurar que el título se vea bien en responsive */
+@media (max-width: 768px) {
+    .profile-details h1 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .verified-badge-profile {
+        margin-top: 5px;
+    }
+}
+
+/* Responsive PROFILE COVER */
+@media (max-width: 768px) {
+    .profile-cover {
+        height: 150px;
+    }
+    
+    .profile-info {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .profile-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .page-wrap {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar-right {
+        display: none; /* O convertir en drawer móvil */
+    }
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .site-header {
+        height: 70px; /* Altura menor en móvil */
+    }
+    
+    .hero-user {
+        height: auto;
+        min-height: 400px;
+    }
+}

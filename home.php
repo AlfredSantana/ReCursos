@@ -99,7 +99,12 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
                             <span class="badge-icon">🎉</span>
                             ¡Nuevo en ReCursos!
                         </div>
-                        <h1>¡Bienvenido a ReCursos, <?php echo htmlspecialchars($user_name); ?>! 🚀</h1>
+                        <h1>
+                            ¡Bienvenido a ReCursos, <?php echo htmlspecialchars($user_name); ?>!
+                            <span class="rocket-icon"></span>
+                        </h1>
+
+
                         <p class="hero-subtitle">Estamos emocionados de tenerte aquí. Comienza tu viaje de aprendizaje o
                             comparte tu conocimiento creando cursos.</p>
 
@@ -120,24 +125,26 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
 
                         <div class="hero-user-actions">
                             <?php if ($cursos_creados > 0): ?>
-                                <a class="btn btn-primary" href="mis-cursos.php">
-                                    <span class="btn-icon">📚</span>
-                                    Mis Cursos Creados
+                                <a class="btn btn-ghost" href="mis-cursos.php">
+                                    <img class="btn-icon-img" src="assets/icons/courses.svg" alt="Crear">
+                                    Mis cursos creados
                                 </a>
                             <?php else: ?>
-                                <a class="btn btn-primary" href="crear-curso.php">
-                                    <span class="btn-icon">✨</span>
+                                <a class="btn btn-ghost" href="crear-curso.php">
+                                    <img class="btn-icon-img" src="assets/icons/courses.svg" alt="Crear">
                                     Crear mi primer curso
                                 </a>
                             <?php endif; ?>
+
                             <a class="btn btn-ghost" href="explorar.php">
-                                <span class="btn-icon">🔍</span>
+                                <img class="btn-icon-img" src="assets/icons/search.svg" alt="Buscar">
                                 Explorar cursos
                             </a>
-                            <a class="btn btn-outline" href="perfil.php">
-                                <span class="btn-icon">👤</span>
+                            <a class="btn btn-ghost" href="editar-perfil.php">
+                                <img class="btn-icon-img" src="assets/icons/user.svg" alt="Perfil">
                                 Completar perfil
                             </a>
+
                         </div>
 
                     <?php else: ?>

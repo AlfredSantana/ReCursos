@@ -167,3 +167,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+// -----------------//
+//       PORTADA
+// -----------------//
+
+// Upload de portada
+document.getElementById('cover-upload').addEventListener('change', function (e) {
+    if (this.files && this.files[0]) {
+        // Aquí iría la lógica para subir la portada al servidor
+        alert('Funcionalidad de subir portada en desarrollo. Por ahora, esta función es demostrativa.');
+
+        // Simular cambio de portada (en un caso real, esto se haría con AJAX)
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('cover-image').src = e.target.result;
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+});

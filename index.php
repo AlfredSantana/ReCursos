@@ -324,9 +324,9 @@ session_start();
                 </div>
 
                 <div class="premium-card">
-                    <img src="assets/icons/support.svg" class="premium-icon">
-                    <h3>Soporte prioritario</h3>
-                    <p>Atención preferencial.</p>
+                    <img src="assets/icons/verified.svg" class="premium-icon">
+                    <h3>Verificación</h3>
+                    <p>Verificación de identidad para mayor confianza.</p>
                 </div>
 
             </div>

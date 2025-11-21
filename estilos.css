@@ -675,6 +675,10 @@ a.card-curso:hover {
 /* Estilos específicos del formulario */
 .login-form {
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Aumenta el espacio entre campos */
+    margin-top: 25px;
 }
 
 .login-form label {
@@ -682,7 +686,7 @@ a.card-curso:hover {
     font-size: 14px;
     font-weight: 600;
     margin-top: 15px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: var(--text);
 }
 
@@ -705,6 +709,7 @@ a.card-curso:hover {
 
 .password-wrap {
     position: relative;
+    margin-bottom: 10px;
 }
 
 /* ============================= */
@@ -746,7 +751,8 @@ a.card-curso:hover {
     font-size: 14px;
     color: var(--primary);
     text-decoration: none;
-    margin-top: 10px;
+    margin-top: -5px;
+    margin-bottom: 10px;
 }
 
 /* Botón principal de login */
@@ -755,7 +761,8 @@ a.card-curso:hover {
     padding: 12px;
     font-size: 16px;
     font-weight: 700;
-    margin-top: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
@@ -771,16 +778,29 @@ a.card-curso:hover {
 /* Divisor 'o' */
 .divider {
     text-align: center;
-    border-bottom: 1px solid var(--muted);
-    line-height: 0.1em;
+    position: relative;
     margin: 30px 0 20px;
     color: var(--muted);
     font-size: 14px;
 }
 
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 60%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--muted);
+    z-index: 1;
+}
+
 .divider span {
     background: var(--card-bg);
-    padding: 0 10px;
+    padding: 0 15px;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
 }
 
 /* Botones de Login Social */
@@ -832,8 +852,10 @@ a.card-curso:hover {
 /* Notas de registro */
 .register-note {
     font-size: 14px;
-    margin-top: 20px;
+    margin-top: 30px; /* Aumenté de 20px a 30px */
     color: var(--text);
+    text-align: center;
+    padding-top: 20px; /* Agregué padding superior adicional */
 }
 
 .register-note a {
@@ -881,7 +903,7 @@ a.card-curso:hover {
 /* ============================= */
 
 footer {
-  margin-top: 40px;
+  margin-top: 5%;
   padding: 24px;
   background: var(--primary-2);
   color: white;
@@ -909,6 +931,7 @@ footer {
 }
 
 .social-icon {
+    margin-top: 50px;
     width: 28px;
     height: 28px;
     filter: invert(1) brightness(2);
@@ -1037,40 +1060,64 @@ footer {
 /* BOTONES ESPECÍFICOS */
 /* ============================= */
 
-.btn-primary {
+.btn-primary,
+.btn-ghost,
+.btn-outline {
     background: linear-gradient(135deg, #56c2ff, #1a3c98);
     color: white;
-    padding: 12px 24px;
+    padding: 12px 24px; /* Aumenté un poco el padding para mejor balance */
     border-radius: 12px;
     text-decoration: none;
     font-weight: 600;
-    border: none;
+    border: 2px solid #182b5c;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex; /* Cambié a flex para mejor alineación */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    gap: 8px; /* Espacio consistente entre icono y texto */
     transition: transform 0.2s ease;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-ghost:hover,
+.btn-outline:hover {
     transform: translateY(-2px);
 }
 
-.btn-ghost {
-    background: transparent;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    border: 2px solid white;
-    cursor: pointer;
-    display: inline-block;
-    transition: all 0.2s ease;
+/* CORRECCIÓN: El btn-outline tenía border de 10px, debe ser 2px */
+.btn-outline {
+    border: 2px solid #182b5c; /* Corregí de 10px a 2px */
 }
 
-.btn-ghost:hover {
-    background: white;
-    color: var(--primary-2);
+.btn-icon-img {
+    width: 20px;
+    height: 20px;
+    /* Quité vertical-align ya que ahora usamos flex */
+    filter: brightness(0) invert(1) brightness(1.2);
+    flex-shrink: 0; /* Evita que el icono se reduzca */
 }
+
+/* Si necesitas versión sin icono (solo texto) */
+.btn-text-only {
+    display: inline-block; /* Para botones sin iconos */
+    text-align: center;
+}
+
+
+.rocket-icon {
+    display: inline-block;
+    width: 42px;   /* tamaño más grande y proporcionado */
+    height: 42px;
+    margin-left: 8px;
+    background-color: white; /* ← color del texto */
+    -webkit-mask-image: url("assets/icons/rocket.svg");
+    mask-image: url("assets/icons/rocket.svg");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
 
 /* ============================= */
 /* EYE ICON STYLES */
@@ -1223,98 +1270,161 @@ footer {
     border: 1px solid #c3e6cb;
 }
 
-.btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 2px solid var(--muted);
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.btn-ghost:hover {
-    background: var(--card-bg);
-}
-
 /* ============================= */
 /* PROFILE PAGE STYLES */
 /* ============================= */
 
-.profile-header {
-    background: var(--card-bg);
-    padding: 40px 0;
-    border-bottom: 1px solid var(--muted);
-    margin-bottom: 30px;
-    border-radius: 0 0 20px 20px;
-}
 
 .profile-info {
-    display: flex;
-    align-items: center;
-    gap: 30px;
+    background: transparent;
 }
 
 .profile-avatar-section {
-    position: relative;
-    flex-shrink: 0;
+    position: absolute;
+    top: -80px; /* Sube el avatar sobre la portada */
+    left: 30px;
+    z-index: 20;
 }
+
 
 .profile-avatar {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid var(--primary);
+    border: 4px solid var(--card-bg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.profile-details {
+    margin-top: 20px !important; /* Espacio grande forzado */
+    
+}
+
+.profile-details h1 {
+    font-size: 2.5rem;
+    margin-top: 25px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.profile-email {
+    color: var(--text-muted, #666); /* Más oscuro en modo claro */
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.profile-email,
+.profile-stat span {
+    color: #666; /* Color gris oscuro por defecto */
+}
+
+[data-theme="dark"] .profile-email,
+[data-theme="dark"] .profile-stat span {
+    color: #aaa; /* Color gris claro en modo oscuro */
+}
+
+/* Mejorar contraste del email específicamente */
+.profile-email {
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.profile-actions {
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 160px;
+    align-self: flex-start;
+}
+
+.profile-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px; /* Padding más compacto */
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid var(--muted);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    white-space: nowrap; /* Evita que el texto se divida */
+    justify-content: center; /* Centra el contenido */
+    width: 100%; /* Ocupa todo el ancho disponible del contenedor */
+    box-sizing: border-box;
+}
+
+.profile-icon-btn img {
+    width: 18px;
+    height: 18px;
+    transition: filter 0.3s ease;
+}
+
+.profile-icon-btn:not(.primary) img {
+    filter: var(--icon-filter, none);
+}
+
+[data-theme="dark"] .profile-icon-btn:not(.primary) img {
+    filter: brightness(0) invert(1); /* Blanco en modo oscuro */
+}
+
+.profile-icon-btn.primary {
+    background: linear-gradient(135deg, #56c2ff, #1a3c98);
+    color: white;
+    border: 1px solid #182b5c;
+}
+
+.profile-icon-btn.primary img {
+    filter: brightness(0) invert(1);
+}
+
+.profile-icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-icon-btn.primary:hover {
+    background: linear-gradient(135deg, #4ab0ff, #152a7a);
 }
 
 .btn-avatar-edit {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background: var(--primary);
-    border: none;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    background: var(--primary);
+    border: 3px solid var(--card-bg);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
 }
 
 .btn-avatar-edit:hover {
     transform: scale(1.1);
+    background: var(--primary-2);
 }
-
 .btn-avatar-edit img {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     filter: brightness(0) invert(1);
-}
-
-.profile-details {
-    flex: 1;
-}
-
-.profile-details h1 {
-    margin: 0 0 5px;
-    font-size: 32px;
-    color: var(--text);
-    font-weight: 800;
-}
-
-.profile-email {
-    color: var(--muted);
-    margin: 0 0 15px;
-    font-size: 16px;
 }
 
 .profile-badges {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 12px;
     flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
 .badge-role, .badge-premium, .badge-member {
@@ -1358,15 +1468,20 @@ footer {
 }
 
 .profile-stat span {
-    font-size: 14px;
-    color: var(--muted);
+    font-size: 0.9rem;
+    color: var(--text-muted, #666); /* Más oscuro en modo claro */
+    margin-top: 4px;
+    font-weight: 500;
 }
 
 .profile-actions {
     display: flex;
-    gap: 15px;
     flex-direction: column;
+    gap: 10px;
+    min-width: 160px; /* Ancho fijo */
+    align-self: flex-start; /* Evita que se estiren */
 }
+
 
 /* Tabs */
 .tabs {
@@ -1385,7 +1500,7 @@ footer {
     transition: 0.3s;
     color: var(--text);
     white-space: nowrap;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 500;
 }
 
@@ -1393,6 +1508,7 @@ footer {
     border-bottom-color: var(--primary);
     color: var(--primary);
     font-weight: 600;
+    text-shadow: black 0.1em 0.1em 0.2em  ;
 }
 
 .tab-btn:hover {
@@ -1473,65 +1589,7 @@ footer {
     text-decoration: none;
 }
 
-/* Responsive para perfil */
-@media (max-width: 768px) {
-    .profile-info {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-    
-    .profile-stats {
-        justify-content: center;
-        gap: 20px;
-    }
-    
-    .profile-actions {
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .profile-avatar {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .profile-details h1 {
-        font-size: 24px;
-    }
-    
-    .section-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-    
-    .tabs {
-        gap: 10px;
-    }
-    
-    .tab-btn {
-        padding: 12px 15px;
-        font-size: 14px;
-    }
-}
 
-@media (max-width: 480px) {
-    .profile-stats {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .profile-badges {
-        justify-content: center;
-    }
-    
-    .card-actions {
-        flex-direction: column;
-        gap: 8px;
-    }
-}
 
 /* Form styles */
 .form-header {
@@ -1583,14 +1641,6 @@ footer {
     margin-top: 30px;
 }
 
-.btn-outline {
-    background: transparent;
-    border: 1px solid var(--muted);
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-}
 
 /* ============================= */
 /* EDIT PROFILE & CREATE COURSE STYLES */
@@ -1685,21 +1735,7 @@ footer {
     border-top: 1px solid var(--muted);
 }
 
-.btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--muted);
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
-.btn-outline:hover {
-    background: var(--bg);
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -1722,23 +1758,19 @@ footer {
 /* ============================= */
 
 .profile-bio {
-    margin: 15px 0 20px 0;
-    padding: 15px;
-    background: var(--bg);
-    border-radius: 8px;
-    border-left: 4px solid var(--primary);
+    margin-bottom: 20px;
+    max-width: 600px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-weight: 600;
 }
+
 
 .profile-bio p {
-    margin: 5px 0 0 0  ;
-    line-height: 1.5;
+    margin: 0;
+    line-height: 1.6;
     color: var(--text);
-    font-size: 14px;
-}
-
-.profile-bio.empty {
-    background: var(--card-bg);
-    border-left-color: var(--muted);
+    font-size: 1rem;
 }
 
 .profile-bio.empty p {
@@ -1746,14 +1778,250 @@ footer {
     font-style: italic;
 }
 
+.profile-bio.empty p {
+    color: var(--muted);
+}
+
 .profile-bio.empty a {
     color: var(--primary);
-    text-decoration: none;
     font-weight: 600;
+    text-decoration: none;
+    font-style: normal;
 }
 
 .profile-bio.empty a:hover {
     text-decoration: underline;
+}
+
+/* ============================= */
+/* PROFILE COVER */
+/* ============================= */
+
+/* Portada del perfil */
+.profile-cover {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.btn-cover-edit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px; /* Padding igual en todos lados */
+    border-radius: 50%; /* Forma circular */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Tamaño fijo */
+    height: 40px; /* Tamaño fijo */
+    transition: all 0.3s ease;
+}
+
+.btn-cover-edit:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-1px);
+}
+
+.btn-cover-edit img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+/* Ocultar el texto */
+.btn-cover-edit::after {
+    display: none; /* Elimina cualquier texto */
+}
+
+/* Ubicación */
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    filter: brightness(0) saturate(100%); /* Negro en modo claro */
+}
+
+[data-theme="dark"] .location-icon {
+    filter: brightness(0) invert(1); /* Blanco en modo oscuro */
+}
+
+/* Para los campos de ubicación en el formulario */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ============================= */
+/* COVER UPLOAD */
+/* ============================= */
+
+.portada-upload {
+    text-align: center;
+}
+
+.current-portada {
+    width: 100%;
+    max-width: 400px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid var(--muted);
+}
+
+/* Badge de Instructor */
+.badge-instructor {
+    background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #FF6B6B;
+}
+
+.badge-instructor-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* Ajustes para el header con portada */
+
+.profile-info {
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* avatar | detalles | acciones */
+    gap: 30px;
+    align-items: start;
+}
+
+.profile-cover {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(135deg, #56c2ff, #1a3c98); /* Fallback por si la imagen no carga */
+}
+
+.profile-header .container {
+    position: relative;
+    margin-top: -60px;
+    z-index: 10;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+
+.btn-cover-edit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cover-edit:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-1px);
+}
+
+.btn-cover-edit img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) invert(1);
+}
+
+/* Ubicación */
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+/* Badge de Instructor */
+.badge-instructor {
+    background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #FF6B6B;
+}
+
+.badge-instructor-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* Ajustes para el header con portada */
+.profile-header {
+    position: relative;
+    margin-bottom: 30px;
 }
 
 /* ============================= */
@@ -2494,12 +2762,6 @@ footer {
 /* VERIFIED BADGE EN PERFIL */
 /* ============================= */
 
-.profile-details h1 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
 
 .verified-badge-profile {
     display: inline-flex;
@@ -2510,24 +2772,12 @@ footer {
     width: 24px;
     height: 24px;
     filter: brightness(0) saturate(100%) invert(47%) sepia(98%) saturate(2310%) hue-rotate(183deg) brightness(98%) contrast(101%);
+    transform: translateY(4px); /* Mueve el icono 1px hacia abajo */
 }
 
 /* Para el tema oscuro */
 :root[data-theme="dark"] .verified-icon-profile {
     filter: brightness(0) saturate(100%) invert(67%) sepia(91%) saturate(527%) hue-rotate(183deg) brightness(101%) contrast(101%);
-}
-
-/* Asegurar que el título se vea bien en responsive */
-@media (max-width: 768px) {
-    .profile-details h1 {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    
-    .verified-badge-profile {
-        margin-top: 5px;
-    }
 }
 
 /* Estilo para el badge premium con icono */
