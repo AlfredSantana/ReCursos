@@ -123,7 +123,19 @@ $stmt_populares = mysqli_prepare($conexion, $query_cursos_populares);
 mysqli_stmt_bind_param($stmt_populares, "i", $user_id);
 mysqli_stmt_execute($stmt_populares);
 $cursos_populares = mysqli_stmt_get_result($stmt_populares);
+
+// Obtener categorías del usuario actual
+$query_categorias = "SELECT categoria FROM usuario_categorias WHERE usuario_id = ?";
+$stmt_categorias = mysqli_prepare($conexion, $query_categorias);
+mysqli_stmt_bind_param($stmt_categorias, "i", $user_id);
+mysqli_stmt_execute($stmt_categorias);
+$categorias_result = mysqli_stmt_get_result($stmt_categorias);
+$user_categorias = [];
+while ($categoria = mysqli_fetch_assoc($categorias_result)) {
+    $user_categorias[] = $categoria['categoria'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -141,12 +153,11 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
 
     <?php include "componentes/header-home.php"; ?>
 
-    <div class="page-wrap">
+    <div class="page-wrap with-sidebar">
         <main class="main-content">
 
             <!-- Header del Perfil -->
             <section class="profile-header">
-                <!-- Portada del perfil -->
                 <!-- Portada del perfil -->
                 <div class="profile-cover">
                     <img src="<?php echo htmlspecialchars($portada_perfil); ?>" alt="Portada del perfil"
@@ -217,6 +228,15 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                                 </div>
                             <?php endif; ?>
 
+                            <?php if (!empty($user_categorias)): ?>
+                                <div class="usuario-categorias">
+                                    <?php foreach ($user_categorias as $categoria): ?>
+                                        <span
+                                            class="categoria-badge-usuario"><?php echo ucfirst(htmlspecialchars($categoria)); ?></span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+
                             <div class="profile-badges">
                                 <span class="badge-role">Estudiante</span>
                                 <?php if ($es_instructor): ?>
@@ -268,53 +288,16 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
             <!-- Contenido con Pestañas -->
             <section class="container">
                 <div class="tabs">
-                    <button class="tab-btn active" data-tab="cursos-tomados">Cursos Recomendados</button>
-                    <button class="tab-btn" data-tab="cursos-creados">Mis Cursos Creados</button>
+                    <button class="tab-btn active" data-tab="cursos-impartidos">Cursos Impartidos</button>
+                    <button class="tab-btn" data-tab="cursos-progreso">Cursos en Progreso</button>
+                    <button class="tab-btn" data-tab="certificados">Mis Certificados</button>
                     <button class="tab-btn" data-tab="configuracion">Configuración</button>
                 </div>
 
-                <!-- Pestaña de Cursos Recomendados -->
-                <div class="tab-content active" id="cursos-tomados">
+                <!-- Pestaña de Cursos Impartidos (PRIMERA PESTAÑA) -->
+                <div class="tab-content active" id="cursos-impartidos">
                     <div class="section-header">
-                        <h2>Cursos Recomendados</h2>
-                        <a href="explorar.php" class="view-all">Ver todos</a>
-                    </div>
-
-                    <?php if (mysqli_num_rows($cursos_populares) > 0): ?>
-                        <div class="cursos-grid">
-                            <?php while ($curso = mysqli_fetch_assoc($cursos_populares)): ?>
-                                <article class="card-curso">
-                                    <img src="<?php echo htmlspecialchars($curso['imagen']); ?>"
-                                        alt="<?php echo htmlspecialchars($curso['titulo']); ?>" loading="lazy">
-                                    <div class="card-body">
-                                        <h3><?php echo htmlspecialchars($curso['titulo']); ?></h3>
-                                        <p class="meta">Por <?php echo htmlspecialchars($curso['instructor_nombre']); ?> ·
-                                            <?php echo $curso['duracion_horas']; ?> horas
-                                        </p>
-                                        <p class="desc"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
-                                        <div class="card-foot">
-                                            <span
-                                                class="price"><?php echo ($curso['precio'] == 0) ? 'Gratis' : 'RD$ ' . $curso['precio']; ?></span>
-                                            <a class="link" href="curso.php?id=<?php echo $curso['id']; ?>">Ver curso</a>
-                                        </div>
-                                    </div>
-                                </article>
-                            <?php endwhile; ?>
-                        </div>
-                    <?php else: ?>
-                        <div class="empty-state">
-                            <img src="assets/icons/course-empty.svg" alt="Sin cursos">
-                            <h3>No hay cursos disponibles</h3>
-                            <p>Pronto tendremos cursos recomendados para ti.</p>
-                            <a href="crear-curso.php" class="btn btn-primary">Crear Primer Curso</a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Pestaña de Cursos Creados -->
-                <div class="tab-content" id="cursos-creados">
-                    <div class="section-header">
-                        <h2>Mis Cursos Creados</h2>
+                        <h2>Mis Cursos Impartidos</h2>
                         <a href="crear-curso.php" class="btn btn-primary">Crear Nuevo Curso</a>
                     </div>
 
@@ -326,13 +309,16 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                                         alt="<?php echo htmlspecialchars($curso['titulo']); ?>" loading="lazy">
                                     <div class="card-body">
                                         <h3><?php echo htmlspecialchars($curso['titulo']); ?></h3>
-                                        <p class="meta"><?php echo $curso['duracion_horas']; ?> horas ·
-                                            <?php echo ucfirst($curso['nivel']); ?>
+                                        <p class="meta">
+                                            <?php echo $curso['duracion_horas']; ?> horas ·
+                                            <?php echo ucfirst($curso['nivel']); ?> ·
+                                            <span class="categoria-badge"><?php echo ucfirst($curso['categoria']); ?></span>
                                         </p>
                                         <p class="desc"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
                                         <div class="card-foot">
-                                            <span
-                                                class="price"><?php echo ($curso['precio'] == 0) ? 'Gratis' : 'RD$ ' . $curso['precio']; ?></span>
+                                            <span class="price">
+                                                <?php echo ($curso['precio'] == 0) ? 'Gratis' : 'RD$ ' . number_format($curso['precio'], 0, '.', ','); ?>
+                                            </span>
                                             <div class="card-actions">
                                                 <a href="editar-curso.php?id=<?php echo $curso['id']; ?>"
                                                     class="link">Editar</a>
@@ -353,6 +339,36 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                     <?php endif; ?>
                 </div>
 
+                <!-- Pestaña de Cursos en Progreso (SEGUNDA PESTAÑA) -->
+                <div class="tab-content" id="cursos-progreso">
+                    <div class="section-header">
+                        <h2>Cursos en Progreso</h2>
+                        <a href="explorar.php" class="view-all">Explorar más cursos</a>
+                    </div>
+
+                    <div class="empty-state">
+                        <img src="assets/icons/learning.svg" alt="Cursos en progreso">
+                        <h3>No tienes cursos en progreso</h3>
+                        <p>Cuando empieces un curso, aparecerá aquí con tu progreso.</p>
+                        <a href="explorar.php" class="btn btn-primary">Explorar Cursos</a>
+                    </div>
+
+                </div>
+
+                <!-- Pestaña de Certificados -->
+                <div class="tab-content" id="certificados">
+                    <div class="section-header">
+                        <h2>Mis Certificados</h2>
+                    </div>
+
+                    <div class="empty-state">
+                        <img src="assets/icons/certificado.svg" alt="Certificados">
+                        <h3>No tienes certificados aún</h3>
+                        <p>Cuando completes cursos, recibirás certificados que aparecerán aquí.</p>
+                        <a href="explorar.php" class="btn btn-primary">Comenzar a Aprender</a>
+                    </div>
+                </div>
+
                 <!-- Pestaña de Configuración -->
                 <div class="tab-content" id="configuracion">
                     <div class="empty-state">
@@ -364,19 +380,27 @@ $cursos_populares = mysqli_stmt_get_result($stmt_populares);
                 </div>
             </section>
         </main>
+
+        <!-- SIDEBAR DERECHO -->
+        <aside class="sidebar-right">
+            <?php include "componentes/sidebar-secciones.php"; ?>
+            <?php include "componentes/cursos-recomendados-sidebar.php"; ?>
+            <?php include "componentes/instructores-sidebar.php"; ?>
+            <?php include "componentes/sidebar-cursos-destacados.php"; ?>
+        </aside>
     </div>
 
     <?php include "componentes/footer.php"; ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // JavaScript para las pestañas
+            // Cambia la pestaña activa inicial a "cursos-impartidos"
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
 
             tabBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // Remover active de todos
+                    // Remover active de todos y agregar a Cursos Impartidos
                     tabBtns.forEach(b => b.classList.remove('active'));
                     tabContents.forEach(c => c.classList.remove('active'));
 

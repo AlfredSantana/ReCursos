@@ -31,6 +31,17 @@ $result_portada = mysqli_stmt_get_result($stmt_portada);
 $portada_data = mysqli_fetch_assoc($result_portada);
 $portada_perfil = $portada_data['portada_url'] ?? 'assets/portadas/default-portada.png';
 
+// Obtener categorías actuales del usuario
+$user_categorias = [];
+$query_categorias = "SELECT categoria FROM usuario_categorias WHERE usuario_id = ?";
+$stmt_categorias = mysqli_prepare($conexion, $query_categorias);
+mysqli_stmt_bind_param($stmt_categorias, "i", $user_id);
+mysqli_stmt_execute($stmt_categorias);
+$result_categorias = mysqli_stmt_get_result($stmt_categorias);
+while ($categoria = mysqli_fetch_assoc($result_categorias)) {
+    $user_categorias[] = $categoria['categoria'];
+}
+
 // VERIFICAR SI EL FORMULARIO FUE ENVIADO
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -63,11 +74,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 $avatar_tmp = $_FILES['avatar']['tmp_name'];
                 $avatar_name = uniqid() . '_' . $_FILES['avatar']['name'];
-                $avatar_dest = 'assets/avatars/' . $avatar_name;
+                $avatar_dest = 'assets/usuarios/avatars/' . $avatar_name;
 
                 if (move_uploaded_file($avatar_tmp, $avatar_dest)) {
                     $avatar_path = $avatar_dest;
                     // Opcional: eliminar avatar anterior si no es el default
+                }
+            }
+
+            // Procesar portada si se subió una nueva
+            if (isset($_FILES['portada']) && $_FILES['portada']['error'] === UPLOAD_ERR_OK) {
+                $portada = $_FILES['portada'];
+
+                // Validar que sea una imagen
+                $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (in_array($portada['type'], $allowed_types)) {
+
+                    // Crear directorio si no existe
+                    if (!is_dir('assets/portadas/')) {
+                        mkdir('assets/portadas/', 0777, true);
+                    }
+
+                    // Generar nombre único para la imagen
+                    $extension = pathinfo($portada['name'], PATHINFO_EXTENSION);
+                    $portada_filename = 'portada_' . $user_id . '_' . time() . '.' . $extension;
+                    $portada_path = 'assets/portadas/' . $portada_filename;
+
+                    // Mover el archivo
+                    if (move_uploaded_file($portada['tmp_name'], $portada_path)) {
+                        // Insertar en tabla portadas_perfil
+                        $insert_portada = "INSERT INTO portadas_perfil (usuario_id, portada_url) VALUES (?, ?)";
+                        $stmt_portada = mysqli_prepare($conexion, $insert_portada);
+                        mysqli_stmt_bind_param($stmt_portada, "is", $user_id, $portada_path);
+                        mysqli_stmt_execute($stmt_portada);
+                    } else {
+                        $error = "Error al subir la portada.";
+                    }
+                } else {
+                    $error = "Solo se permiten imágenes JPG, PNG, GIF o WEBP para la portada.";
                 }
             }
 
@@ -98,12 +142,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         mysqli_stmt_close($check_stmt);
     }
+
+    // Procesar categorías del usuario
+    if (isset($_POST['categorias']) && is_array($_POST['categorias'])) {
+        // Validar que no exceda el límite de 3 categorías
+        if (count($_POST['categorias']) > 3) {
+            $error = "Solo puedes seleccionar un máximo de 3 categorías";
+        } else {
+            // Eliminar categorías actuales
+            $delete_categorias = "DELETE FROM usuario_categorias WHERE usuario_id = ?";
+            $stmt_delete = mysqli_prepare($conexion, $delete_categorias);
+            mysqli_stmt_bind_param($stmt_delete, "i", $user_id);
+            mysqli_stmt_execute($stmt_delete);
+
+            // Insertar nuevas categorías
+            $insert_categoria = "INSERT INTO usuario_categorias (usuario_id, categoria) VALUES (?, ?)";
+            $stmt_insert = mysqli_prepare($conexion, $insert_categoria);
+
+            foreach ($_POST['categorias'] as $categoria) {
+                $categoria_limpia = trim($categoria);
+                if (!empty($categoria_limpia)) {
+                    mysqli_stmt_bind_param($stmt_insert, "is", $user_id, $categoria_limpia);
+                    mysqli_stmt_execute($stmt_insert);
+                }
+            }
+
+            // Actualizar categorías locales
+            $user_categorias = $_POST['categorias'];
+        }
+    }
 }
 
 // Procesar actualización de perfil
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST['nombre']);
-    $email = trim($_POST['email']);
+    $email = trim($_POST['correo']);
     $bio = trim($_POST['bio']);
 
     // Procesar avatar si se subió uno nuevo
@@ -253,14 +326,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="form-group">
                         <label for="email">Correo Electrónico *</label>
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="correo" name="correo" required
                             value="<?php echo htmlspecialchars($user_data['correo'] ?? ''); ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="bio">Biografía</label>
-                        <textarea id="bio" name="bio" rows="4"
-                            placeholder="Cuéntanos sobre ti..."><?php echo htmlspecialchars($user_data['bio'] ?? ''); ?></textarea>
+                        <textarea id="bio" name="bio" rows="4" maxlength="50"
+                            placeholder="Cuéntanos sobre ti (máximo 50 caracteres)..."><?php echo htmlspecialchars($user_data['bio'] ?? ''); ?></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/50 caracteres
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categorias">Tus Especialidades/Categorías <small>(Máximo 3)</small></label>
+                        <div class="categorias-select">
+                            <select id="categorias" name="categorias[]" multiple class="select-multiple"
+                                onchange="updateCategoriesCounter()">
+                                <option value="programacion" <?php echo in_array('programacion', $user_categorias) ? 'selected' : ''; ?>>Programación</option>
+                                <option value="diseno" <?php echo in_array('diseno', $user_categorias) ? 'selected' : ''; ?>>Diseño</option>
+                                <option value="marketing" <?php echo in_array('marketing', $user_categorias) ? 'selected' : ''; ?>>Marketing</option>
+                                <option value="musica" <?php echo in_array('musica', $user_categorias) ? 'selected' : ''; ?>>Música</option>
+                                <option value="fotografia" <?php echo in_array('fotografia', $user_categorias) ? 'selected' : ''; ?>>Fotografía</option>
+                                <option value="negocios" <?php echo in_array('negocios', $user_categorias) ? 'selected' : ''; ?>>Negocios</option>
+                                <option value="idiomas" <?php echo in_array('idiomas', $user_categorias) ? 'selected' : ''; ?>>Idiomas</option>
+                                <option value="otros" <?php echo in_array('otros', $user_categorias) ? 'selected' : ''; ?>>Otros</option>
+                            </select>
+                            <div class="categorias-counter" id="categorias-counter">
+                                <span id="selected-count"><?php echo count($user_categorias); ?></span>/3 categorías
+                                seleccionadas
+                            </div>
+                            <small>Mantén Ctrl (Cmd en Mac) para seleccionar múltiples categorías</small>
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -323,5 +421,120 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </script>
 </body>
+
+<script>
+    // Contador de categorías
+    function updateCategoriesCounter() {
+        const select = document.getElementById('categorias');
+        const counter = document.getElementById('categorias-counter');
+        const countSpan = document.getElementById('selected-count');
+
+        const selectedCount = Array.from(select.selectedOptions).length;
+        countSpan.textContent = selectedCount;
+
+        // Cambiar estilo según el conteo
+        if (selectedCount > 3) {
+            counter.classList.add('limit-reached');
+            counter.classList.remove('limit-warning');
+        } else if (selectedCount === 3) {
+            counter.classList.add('limit-warning');
+            counter.classList.remove('limit-reached');
+        } else {
+            counter.classList.remove('limit-reached', 'limit-warning');
+        }
+    }
+
+    // Validación antes de enviar el formulario
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.profile-form');
+
+        form.addEventListener('submit', function (e) {
+            const select = document.getElementById('categorias');
+            const selectedCount = Array.from(select.selectedOptions).length;
+
+            if (selectedCount > 3) {
+                e.preventDefault();
+                alert('Solo puedes seleccionar un máximo de 3 categorías. Por favor, deselecciona algunas categorías.');
+                return false;
+            }
+        });
+
+        // Inicializar contador al cargar la página
+        updateCategoriesCounter();
+    });
+
+    // Prevenir selección de más de 3 categorías
+    document.getElementById('categorias').addEventListener('change', function (e) {
+        const selectedCount = Array.from(this.selectedOptions).length;
+
+        if (selectedCount > 3) {
+            // Deseleccionar la última opción seleccionada
+            this.selectedOptions[this.selectedOptions.length - 1].selected = false;
+            alert('Solo puedes seleccionar un máximo de 3 categorías');
+            updateCategoriesCounter();
+        }
+    });
+
+    // Contador de caracteres para biografía
+    document.addEventListener('DOMContentLoaded', function () {
+        const bioTextarea = document.getElementById('bio');
+        const charCount = document.getElementById('char-count');
+
+        if (bioTextarea && charCount) {
+            // Mostrar caracteres actuales al cargar la página
+            charCount.textContent = bioTextarea.value.length;
+
+            // Cambiar color según el conteo actual
+            if (bioTextarea.value.length > 450) {
+                charCount.style.color = '#e74c3c';
+            } else if (bioTextarea.value.length > 400) {
+                charCount.style.color = '#f39c12';
+            }
+
+            // Actualizar contador al escribir
+            bioTextarea.addEventListener('input', function () {
+                charCount.textContent = this.value.length;
+
+                // Cambiar color si se acerca al límite
+                if (this.value.length > 450) {
+                    charCount.style.color = '#e74c3c';
+                } else if (this.value.length > 400) {
+                    charCount.style.color = '#f39c12';
+                } else {
+                    charCount.style.color = '';
+                }
+            });
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('avatar-preview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewPortada(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('portada-preview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Asignar eventos a los inputs de archivo
+        document.getElementById('avatar').addEventListener('change', function () {
+            previewImage(this);
+        });
+
+        document.getElementById('portada').addEventListener('change', function () {
+            previewPortada(this);
+        });
+    });
+</script>
 
 </html>

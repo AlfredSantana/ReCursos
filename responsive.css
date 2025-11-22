@@ -440,3 +440,29 @@
         min-height: 400px;
     }
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .site-header {
+        height: 70px; /* Altura menor en móvil */
+    }
+    
+    .hero-user {
+        height: auto;
+        min-height: 400px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

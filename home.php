@@ -86,7 +86,7 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
 
     <?php include "componentes/header-home.php"; ?>
 
-    <div class="page-wrap">
+    <div class="page-wrap with-sidebar">
         <main class="main-content">
             <!---------------------------------------------->
             <!-- HERO MEJORADO PARA USUARIOS LOGUEADOS -->
@@ -224,6 +224,14 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
             <!-- ... resto de las secciones ... -->
 
         </main>
+
+        <!-- SIDEBAR DERECHO -->
+        <aside class="sidebar-right">
+            <?php include "componentes/sidebar-secciones.php"; ?>
+            <?php include "componentes/cursos-recomendados-sidebar.php"; ?>
+            <?php include "componentes/instructores-sidebar.php"; ?>
+            <?php include "componentes/sidebar-cursos-destacados.php"; ?>
+        </aside>
     </div>
 
     <?php include "componentes/footer.php"; ?>
