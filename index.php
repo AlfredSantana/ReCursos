@@ -6,9 +6,14 @@ session_start();
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>ReCursos — Aprende, enseña y certifícate</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="/css/estilos.css">
+=======
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
+>>>>>>> 6ca2f45cad4ae75a0633f7c5434e9483eadd36aa
     <script defer src="js/theme.js"></script>
 </head>
 
@@ -33,17 +38,17 @@ session_start();
                 </div>
 
                 <p class="hero-premium-note">
-                    <img src="assets/icons/premium.svg" class="diamond-icon" alt="premium">
+                    <img title="ReCursos Premium" src="assets/icons/premium.svg" class="diamond-icon" alt="premium">
                     Obtén <strong>ReCursos Premium</strong>: sin anuncios, acceso ilimitado y certificados verificados.
                 </p>
             </div>
 
             <div class="hero-image">
-                <img src="assets/banners/hero-placeholder.avif" alt="Estudiantes aprendiendo">
+                <img title="Banner de chicos aprendiendo" src="assets/banners/hero-placeholder.avif"
+                    alt="Estudiantes aprendiendo">
                 <div class="hero-overlay"></div>
             </div>
         </section>
-
 
         <!---------------------------------------------->
         <!-- CATEGORÍAS -->
@@ -102,7 +107,7 @@ session_start();
             <div class="cursos-grid">
 
                 <article class="card-curso">
-                    <img src="assets/cursos/cocina1.webp" alt="Cocina Dominicana" loading="lazy">
+                    <img src="assets/cursos/cocina1.jpg" alt="Cocina Dominicana" loading="lazy">
                     <span class="badge">Nuevo</span>
                     <div class="card-body">
                         <h3>Cocina Dominicana para Principiantes</h3>
@@ -323,9 +328,9 @@ session_start();
                 </div>
 
                 <div class="premium-card">
-                    <img src="assets/icons/support.svg" class="premium-icon">
-                    <h3>Soporte prioritario</h3>
-                    <p>Atención preferencial.</p>
+                    <img src="assets/icons/verified.svg" class="premium-icon">
+                    <h3>Verificación</h3>
+                    <p>Verificación de identidad para mayor confianza.</p>
                 </div>
 
             </div>

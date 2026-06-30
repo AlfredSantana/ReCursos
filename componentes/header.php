@@ -1,20 +1,38 @@
-<header class="site-header">
+<header class="site-header index-header">
     <div class="wrap">
 
         <!-- Logo -->
-        <a href="<?php echo isset($_SESSION['user_id']) ? 'home.php' : 'index.php'; ?>" class="logo-wrap">
-            <img src="assets/logo/logo3sf.png" class="logo" alt="ReCursos">
+        <!-- Logo -->
+        <a href="<?php
+        // páginas donde el logo SIEMPRE debe ir a index.php
+        $forzarIndex = ['index.php', 'login.php', 'register.php'];
+
+        $paginaActual = basename($_SERVER['PHP_SELF']);
+
+        if (in_array($paginaActual, $forzarIndex)) {
+            echo 'index.php';
+        } else {
+            echo isset($_SESSION['user_id']) ? 'home.php' : 'index.php';
+        }
+        ?>" class="logo-wrap">
+            <img title="ReCursos logo" src="assets/logo/logo3sf.png" class="logo" alt="ReCursos logo">
             <div class="logo-text">
                 <span class="logo-re">Re</span><span class="logo-cursos">Cursos</span>
             </div>
         </a>
 
 
+
         <!-- Barra de búsqueda -->
-        <form class="search-bar" action="buscar.php" method="GET">
-            <input type="text" name="q" placeholder="Buscar cursos, categorías o instructores...">
-            <img src="assets/icons/search.svg" class="search-icon" alt="buscar">
-        </form>
+        <div class="search-bar">
+            <form method="GET" action="buscar.php" class="search-form">
+                <input type="text" name="q" placeholder="Buscar cursos..."
+                    value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>" class="search-input">
+                <button type="submit" class="search-btn">
+                    <img src="assets/icons/search.svg" class="search-icon" alt="Buscar">
+                </button>
+            </form>
+        </div>
 
         <!-- Navegación -->
         <nav class="nav">

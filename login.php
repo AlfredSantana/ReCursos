@@ -47,9 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Iniciar Sesión — ReCursos</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="/css/estilos.css">
+=======
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="responsive.css">
+>>>>>>> 6ca2f45cad4ae75a0633f7c5434e9483eadd36aa
     <script defer src="js/theme.js"></script>
 </head>
 
