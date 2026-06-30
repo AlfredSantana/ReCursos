@@ -16,7 +16,7 @@ $user_name = $_SESSION['user_name'] ?? 'Usuario';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Inicio — ReCursos</title>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="/css/estilos.css">
     <script defer src="js/theme.js"></script>
 </head>
 

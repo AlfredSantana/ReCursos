@@ -20,7 +20,7 @@ $_SESSION['usuario']['tipo_usuario'] = "premium";
 <html>
 
 <head>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="/css/estilos.css">
 </head>
 
 <body>

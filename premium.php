@@ -7,7 +7,7 @@ $usuario = $_SESSION['usuario'] ?? null;
 <html>
 
 <head>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="/css/estilos.css">
 </head>
 
 <body>
