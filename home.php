@@ -76,12 +76,7 @@ $cursos_recientes = mysqli_stmt_get_result($stmt_recientes);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Inicio — ReCursos</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="/css/estilos.css">
-=======
-    <link rel="stylesheet" href="estilos.css">
-    <link rel="stylesheet" href="responsive.css">
->>>>>>> 6ca2f45cad4ae75a0633f7c5434e9483eadd36aa
+    <link rel="stylesheet" href="/estilos.css">
     <script defer src="js/theme.js"></script>
     <script defer src="js/menu.js"></script>
 </head>

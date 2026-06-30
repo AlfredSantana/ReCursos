@@ -279,7 +279,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Editar Perfil — ReCursos</title>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="/estilos.css">
     <link rel="stylesheet" href="responsive.css">
     <script defer src="js/theme.js"></script>
     <script defer src="js/menu.js"></script>

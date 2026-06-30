@@ -140,17 +140,7 @@ while ($categoria = mysqli_fetch_assoc($categorias_result)) {
 <html lang="es">
 
 <head>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="/css/estilos.css">
-=======
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Mi Perfil — ReCursos</title>
-    <link rel="stylesheet" href="estilos.css">
-    <link rel="stylesheet" href="responsive.css">
-    <script defer src="js/theme.js"></script>
-    <script defer src="js/menu.js"></script>
->>>>>>> 6ca2f45cad4ae75a0633f7c5434e9483eadd36aa
+    <link rel="stylesheet" href="/estilos.css">
 </head>
 
 <body>
