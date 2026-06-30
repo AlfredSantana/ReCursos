@@ -53,7 +53,7 @@ if ($es_premium && $precio_original > 0) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Comprar Curso — ReCursos</title>
-    <link rel="stylesheet" href="/estilos.css">
+    <link rel="stylesheet" href="/public/estilos.css">
 </head>
 
 <body>
